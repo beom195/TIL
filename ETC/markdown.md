@@ -72,7 +72,7 @@ H1 부터 H6 까지 지원 된다.
 - 두껍게 **별표**, __언더바__ 사용  
 - 이텔릭체와 두껍게는 혼용 가능  
 - 취소선은 ~~물결~~ 사용  
-- <u>밀줄은</u> u 태그 사용
+- <u> 밀줄은 </u> u 태그 사용
 
 ## 3.목록
 ***
@@ -101,10 +101,11 @@ H1 부터 H6 까지 지원 된다.
 [참조 링크2] [네이버로 가자]
 [네이버로 가자]: https://naver.com "네이버로 이동"  
 ```
-[Google] (https://google.com)  
-[Naver] (https://naver.com)  
-[내부 링크] (../this/is/example)  
-[참조 링크] (https://google.com) "구글로 이동"  
+[Google](https://google.com)  
+[Naver](https://naver.com)  
+[내부 링크](../this/is/example)  
+[참조 링크](https://google.com) "구글로 이동"  
+
 
 ## 5.코드 강조
 
