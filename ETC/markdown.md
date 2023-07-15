@@ -188,10 +188,6 @@ print s
 하지만 TIL 작성을 위한 기본적인 문법 숙지는 되었으므로 만족한다.  
 사용하면서 필요하다고 생각되는 문법은 추후에 추가하도록 하겠다.
 
-+ 참고  
-https://heropy.blog/2017/09/30/markdown/  
-https://gist.github.com/ihoneymon/652be052a0727ad59601
-
 
 
 
