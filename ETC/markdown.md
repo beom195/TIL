@@ -189,8 +189,8 @@ print s
 사용하면서 필요하다고 생각되는 문법은 추후에 추가하도록 하겠다.
 
 + 참고  
-https://heropy.blog/2017/09/30/markdown/
-  https://gist.github.com/ihoneymon/652be052a0727ad59601
+https://heropy.blog/2017/09/30/markdown/  
+https://gist.github.com/ihoneymon/652be052a0727ad59601
 
 
 
