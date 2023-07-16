@@ -15,18 +15,60 @@ jwt는 헤더(header), 페이로드(payload), 서명(signature)
 ```
 (헤더).(페이로드),(서명)
 ```
+### 헤더(header)
 헤더에는 토큰에서 사용될 타입과 해시 암호화 알고리즘으로 구성되어 있다
 ```
 { 
  "alg": "HS256",
- "typ": JWT
+ "typ": "JWT"
 }
 ```
 - alg: jwt를 서명하는데 사용한 알고리즘을 지정한다. 보통 HMAC, SHA256 혹은 RSA가 사용된다.
 - typ: 토큰의 타입을 지정한다.
 
-> 이후 내용 업데이트 예정
+### 페이로드(payload)
+페이로드에는 claim이라는 사용자 또는 토큰에 대한 정보가 key-value의 형태로 저장되어있다.  
+claim은 `Registered Claim`,`Public Claim`,`Private Claim` 세 가지가 있다.
 
+- registered claim: 토큰 정보를 표현하기 위해 미리 정해진 데이터들
+  - iss: 토큰 발급자(issuer)
+  - sub: 토큰 제목(subject)
+  - aud: 토큰 대상자(audience)
+  - exp: 토큰 만료 시간(expiration), NumericData 형식
+  - nbf: 토큰 활성일(not before), 이 날이 지나기 전의 토큰은 활성화 안됌
+  - iat: 토큰 발급 시간(issued at): 토큰 발급 이후의 경과 시간을 알 수 있음
+  - jti: JWT 토큰 식별자(JWT ID), 중복 방지를 위해 사용하며 일회용 토큰(Access Token)등에 사용된다.
+- public claim: 사용자가 마음대로 정의할 수 있고 충돌을 방지하기 위해서는  IANA JSON에 정의 되어 있거나 네임스페이스를 포함하는 url로 정의해야 한다.
+
+[IANA JSON](https://www.iana.org/assignments/jwt/jwt.xhtml)
+
+```
+{
+"picture": "this@is.example",
+"birthdate": "http://this.is/public_claim/example",
+"http://beom195.github.com": true
+}
+```
+위 처럼 등록된 클레임 `picture`, `birthdate` 등을 사용해도 되고  
+url 형태로 사용할 수 있다.
+
+- private claim: 클라이언트와 서버간에 협의된 클레임 이름을 사용하고 registerd claim과 충돌이 일어나지 않게 주의해야한다. 
+```
+{
+"user_id": "11223355"
+"user_password": "q1w2e3r4@"
+}
+```
+
+### 서명(signature)
+서명은 토큰을 인코딩, 유효성 검증을 할 때 사용되는 암호화 코드이다.  
+헤더와 페이로드가 비밀키로 서명되어 저장된다.
+
+> jwt 토큰은 네트워크 전송을 하기 때문에 공간을 적게 차지하기 위해  
+> 데이터를 저장할 때 키(key)를 3글자로 줄이는 관행이 있다.
+
+
+> 이후 내용 업데이트 예정
 
 
 
