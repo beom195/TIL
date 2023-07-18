@@ -70,15 +70,101 @@ url 형태로 사용할 수 있다.
 > 데이터를 저장할 때 키(key)를 3글자로 줄이는 관행이 있다.
 
 ## Java 활용 Jwt 토큰 생성 예시
-```java
+
+> jjwt 오픈소스 라이브러리를 사용하여 jwt를 생성한 코드들이다.  
+> 테스트 코드는 maven을 기준으로 테스트하였다.
+
+먼저 pom.xml 파일에 jjwt 의존성을 추가 해준다.
+```xml
+<dependencies>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>0.11.2</version>
+    </dependency>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>0.11.2</version>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>0.11.2</version>
+        <scope>runtime</scope>
+    </dependency>
+</dependencies>
 
 ```
 
+jjwt 라이브러리는 보안 상의 이유로 256비트 이상의 안전한 비밀키를 권장한다.  
+비밀키는 충분히 길고 난수로 구성되어야하기 때문에  
+'SecureRandom' 클래스를 사용하여 안전한 난수를 생성한다. 
 
 
+```java
+public class JwtTokenGenerator {
 
+    public static void main(String[] args) {
+        // 비밀키 생성
+        byte[] mySecretKey = new byte[32]; // 256비트 (32바이트)
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(mySecretKey);
+        String secretKey = Base64.getEncoder().encodeToString(mySecretKey);
+      
+        // 생성된 비밀키 출력
+        System.out.println("Generated Secret Key: " + secretKey);
+    }
+```
+토큰의 만료 시간을 설정해준다.
+```java
+        // 토큰의 만료 시간 설정
+        long expirationTimeMillis = 3600000; // 1시간
 
+        // 현재 시간과 만료 시간으로부터 만료 일자 계산
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + expirationTimeMillis);
+```
+헤더와 페이로드는 json 형식으로 구성되어야한다.  
+jjwt 라이브러리의 Jwts.builder()를 사용해 헤더와 페이로드를 설정 할 수 있다.  
+.signWith() 메서드를 사용하여 위에서 생성했던 secretKey와 연결하여  
+jwt 토큰을 생성한다.
+```java
+// JWT 토큰 생성
+        String token = Jwts.builder()
+                .setHeaderParam("alg", "HS256") // 헤더 설정
+                .setHeaderParam("typ","JWT")
+                .setSubject("JWT_TEST") // 페이로드 설정
+                .claim("user_name","jinbeom")
+                .claim("user_age", "25")
+                .claim("user_email","qwer@abc.com")
+                .claim("http://github.com","true")
+                .setIssuedAt(now) // 토큰 발급 시간 설정
+                .setExpiration(expirationDate) // 토큰 만료 시간 설정
+                .signWith(SignatureAlgorithm.HS256, secretKey) // 서명 알고리즘과 비밀키 설정
+                .compact();
+
+        // 생성된 토큰 출력
+        System.out.println("Generated Token: " + token);
+    }
+}
+```
+코드를 실행하면 토큰이 생성 되는걸 볼 수 있다.
+``` 
+Generated Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKV1RfVEVTVCIsInVzZXJfbmFtZSI6ImppbmJlb20iLCJ1c2VyX2FnZSI6IjI1IiwidXNlcl9lbWFpbCI6InF3ZXJAYWJjLmNvbSIsImh0dHA6Ly9naXRodWIuY29tIjoidHJ1ZSIsImlhdCI6MTY4OTY4MTA5OSwiZXhwIjoxNjg5Njg0Njk5fQ.aOhUsEmn15XBUxM40opeM4GVtEI2bgXo4cGIld_8hsQ
+```
+생성된 토큰을 [jwt.io](https://jwt.io/)에 들어가서 확인해보면  
+<img src="/ETC/img/jwt_test.jpg">
+
+페이로드 값에 위에서 설정한 값들이 나오는걸 확인 할 수 있다.
+
+## 마무리
+jwt의 구조인 헤더, 페이로드, 서명의 기본적인 개념을 알게 되었고  
+테스트 코드를 활용해 직접 토큰까지 생성하는 좋은 경험이 되었다.  
+추후에는 jwt와 비교되는 쿠키와 세션에 대해서 알아보는 시간을 가져보도록하겠다.
 
 ## 참고
 - https://www.daleseo.com/jwt/  
 - https://velog.io/@dnjscksdn98/JWT-JSON-Web-Token-%EC%86%8C%EA%B0%9C-%EB%B0%8F-%EA%B5%AC%EC%A1%B0
+- https://erjuer.tistory.com/87
